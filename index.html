@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Rate Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            color: #e91e63;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background: #e91e63;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #c2185b;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 32px; /* Made larger */
+            color: #e91e63;
+            display: none;
+            font-weight: bold;
+        }
+        .loading {
+            display: none;
+            margin-top: 20px;
+        }
+        .loading-bar {
+            width: 100%;
+            height: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .loading-fill {
+            height: 100%;
+            background: #e91e63;
+            width: 0%;
+            animation: fill 3s ease-in-out;
+        }
+        @keyframes fill {
+            to { width: 100%; }
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            font-size: 48px;
+            color: #ff5722;
+            font-weight: bold;
+            text-align: center;
+        }
+        .heart {
+            position: absolute;
+            color: #e91e63;
+            font-size: 24px;
+            animation: float 5s infinite linear;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Love Rate Calculator</h1>
+        <input type="text" id="name1" placeholder="Your Name" required>
+        <input type="text" id="name2" placeholder="Partner's Name" required>
+        <button id="calculate">Calculate Love Rate</button>
+        <div class="loading">
+            <p>Calculating...</p>
+            <div class="loading-bar">
+                <div class="loading-fill"></div>
+            </div>
+        </div>
+        <div class="result" id="result"></div>
+    </div>
+    <div class="popup" id="popup">BEE ki knows your lover's name </div>
+    <audio id="bangSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" preload="auto"></audio> <!-- Placeholder sound; replace with a bang sound URL if needed -->
+
+    <script>
+        const calculateBtn = document.getElementById('calculate');
+        const resultDiv = document.getElementById('result');
+        const loadingDiv = document.querySelector('.loading');
+        const popup = document.getElementById('popup');
+        const bangSound = document.getElementById('bangSound');
+        const name1 = document.getElementById('name1');
+        const name2 = document.getElementById('name2');
+
+        // Generate hearts
+        function createHearts() {
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                document.body.appendChild(heart);
+            }
+        }
+        createHearts();
+
+        calculateBtn.addEventListener('click', () => {
+            if (!name1.value || !name2.value) {
+                alert('Please enter both names.');
+                return;
+            }
+
+            loadingDiv.style.display = 'block';
+            resultDiv.style.display = 'none';
+            popup.style.display = 'none';
+
+            setTimeout(() => {
+                loadingDiv.style.display = 'none';
+                let loveRate;
+                const key = name1.value + name2.value;
+                if (localStorage.getItem(key)) {
+                    loveRate = localStorage.getItem(key);
+                } else {
+                    loveRate = Math.floor(Math.random() * 101);
+                    localStorage.setItem(key, loveRate);
+                }
+                resultDiv.innerHTML = `Your love rate is ${loveRate}%!`;
+                resultDiv.style.display = 'block';
+
+                setTimeout(() => {
+                    popup.style.display = 'flex';
+                    bangSound.play(); // Play the bang sound
+                }, 2000);
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
